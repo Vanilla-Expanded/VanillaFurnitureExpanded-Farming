@@ -6,7 +6,7 @@ namespace VFEF
     {
         public CompProperties_ScaresAnimals()
         {
-            this.compClass = typeof(CompScaresAnimals);
+            compClass = typeof(CompScaresAnimals);
         }
 
         public int ticksPerPulse;

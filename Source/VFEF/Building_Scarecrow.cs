@@ -10,7 +10,7 @@ namespace VFEF
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref this.shouldScare, "shouldScare", false, false);
+            Scribe_Values.Look<bool>(ref shouldScare, "shouldScare", false, false);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
@@ -28,11 +28,11 @@ namespace VFEF
                     defaultDesc = "VFEF_ScarecrowGizmoText".Translate(),
                     hotKey = KeyBindingDefOf.Misc3,
                     icon = ContentFinder<Texture2D>.Get("Icons/Forbidden", true),
-                    isActive = (() => this.shouldScare),
+                    isActive = (() => shouldScare),
                     toggleAction = delegate ()
                     {
-                        this.shouldScare = !this.shouldScare;
-                        this.TryGetComp<CompScaresAnimals>().affectCA = this.shouldScare;
+                        shouldScare = !shouldScare;
+                        this.TryGetComp<CompScaresAnimals>().affectCA = shouldScare;
                     }
                 };
             }

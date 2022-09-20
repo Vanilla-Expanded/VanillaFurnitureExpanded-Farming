@@ -11,7 +11,7 @@ namespace VFEF
         {
             get
             {
-                return (CompProperties_Sprinkler)this.props;
+                return (CompProperties_Sprinkler)props;
             }
         }
 
@@ -28,38 +28,38 @@ namespace VFEF
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            this.parent.Map.GetComponent<VFEF_SprinklersManager>().Register(this);
-            this.LastSprinkledMotesTick = (long)(GenTicks.TicksAbs - 60000);
-            this.affectCells.AddRange(this.parent.Map.AllCells.Where(cell => this.parent.Position.DistanceTo(cell) < this.Props.effectRadius));
+            parent.Map.GetComponent<VFEF_SprinklersManager>().Register(this);
+            LastSprinkledMotesTick = (long)(GenTicks.TicksAbs - 60000);
+            affectCells.AddRange(parent.Map.AllCells.Where(cell => parent.Position.DistanceTo(cell) < Props.effectRadius));
         }
 
         public override void PostDeSpawn(Map map)
         {
             base.PostDeSpawn(map);
             map.GetComponent<VFEF_SprinklersManager>().Deregister(this);
-            this.affectCells.Clear();
+            affectCells.Clear();
         }
 
         public void StartSprinklingMotes()
         {
-            this.curRot = 0f;
-            this.CurrentlySprinklingMotes = true;
-            this.MoteSprinkleEndTick = (long)(GenTicks.TicksAbs + this.Props.sprinkleDurationTicks);
-            this.SprinkleMotes();
-            this.LastSprinkledMotesTick = (long)GenTicks.TicksAbs;
+            curRot = 0f;
+            CurrentlySprinklingMotes = true;
+            MoteSprinkleEndTick = (long)(GenTicks.TicksAbs + Props.sprinkleDurationTicks);
+            SprinkleMotes();
+            LastSprinkledMotesTick = (long)GenTicks.TicksAbs;
         }
 
         public void SprinkleMotes()
         {
-            if (GenTicks.TicksAbs > this.MoteSprinkleEndTick)
+            if (GenTicks.TicksAbs > MoteSprinkleEndTick)
             {
-                this.CurrentlySprinklingMotes = false;
+                CurrentlySprinklingMotes = false;
             }
-            if (GenTicks.TicksAbs % this.Props.moteMod == 0)
+            if (GenTicks.TicksAbs % Props.moteMod == 0)
             {
-                MoteSprinkler.ThrowWaterSpray(this.parent.TrueCenter(), this.parent.Map, this.curRot, this.Props.moteThingDef);
+                MoteSprinkler.ThrowWaterSpray(parent.TrueCenter(), parent.Map, curRot, Props.moteThingDef);
             }
-            this.curRot += this.Props.degreesPerTick;
+            curRot += Props.degreesPerTick;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace VFEF
         {
             MoteThrown moteThrown = ThingMaker.MakeThing(def, null) as MoteThrown;
             moteThrown.Scale = 1.5f;
-            moteThrown.rotationRate = (float)Rand.RangeInclusive(-30, 30);
+            moteThrown.rotationRate = Rand.RangeInclusive(-30, 30);
             return moteThrown;
         }
 

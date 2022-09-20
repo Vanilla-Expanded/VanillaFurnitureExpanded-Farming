@@ -50,8 +50,6 @@
   <ItemGroup>
     <Compile Include="Building_PlantGrower_NoEmptyLines.cs" />
     <Compile Include="Building_Scarecrow.cs" />
-    <Compile Include="CompAreaGizmo.cs" />
-    <Compile Include="CompProperties_AreaGizmo.cs" />
     <Compile Include="CompProperties_ScaresAnimals.cs" />
     <Compile Include="CompProperties_Sprinkler.cs" />
     <Compile Include="CompScaresAnimals.cs" />

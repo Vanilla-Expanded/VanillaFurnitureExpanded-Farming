@@ -6,7 +6,7 @@ namespace VFEF
     {
         public CompProperties_Sprinkler()
         {
-            this.compClass = typeof(CompSprinkler);
+            compClass = typeof(CompSprinkler);
         }
 
         public float effectRadius;

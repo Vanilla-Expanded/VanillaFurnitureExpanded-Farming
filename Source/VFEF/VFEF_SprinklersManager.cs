@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 
@@ -14,11 +11,10 @@ namespace VFEF
         {
         }
 
-        private List<CompSprinkler> comps = new List<CompSprinkler>();
-
         private List<IntVec3> affectedCells = new List<IntVec3>();
 
-        private List<string> exception = new List<string>()
+        private readonly List<CompSprinkler> comps = new List<CompSprinkler>();
+        private readonly List<string> exception = new List<string>()
         {
             "VFE_PlanterBox",
             "VFE_PlanterBox_Tilable"
@@ -26,12 +22,14 @@ namespace VFEF
 
         public void Register(CompSprinkler c)
         {
-            this.comps.Add(c);
+            comps.Add(c);
+            ReCacheCells();
         }
 
         public void Deregister(CompSprinkler c)
         {
-            this.comps.Remove(c);
+            comps.Remove(c);
+            ReCacheCells();
         }
 
         private void BoostPlantAt(IntVec3 cell)
@@ -43,15 +41,24 @@ namespace VFEF
             }
         }
 
+        private void ReCacheCells()
+        {
+            for (int i = 0; i < comps.Count; i++)
+            {
+                affectedCells.AddRange(comps[i].affectCells);
+            }
+            affectedCells = affectedCells.Distinct().ToList(); // Remove duplicate cells
+        }
+
         public override void MapComponentTick()
         {
-            if (GenLocalDate.HourOfDay(this.map) == 7)
+            if (GenLocalDate.HourOfDay(map) == 7)
             {
-                foreach (CompSprinkler _sprinkler in this.comps)
+                for (int i = 0; i < comps.Count; i++)
                 {
-                    if (_sprinkler.parent.GetComp<CompPowerTrader>().PowerOn &&  !_sprinkler.CurrentlySprinklingMotes && (long)GenTicks.TicksAbs - _sprinkler.LastSprinkledMotesTick >= 57500L)
+                    CompSprinkler _sprinkler = comps[i];
+                    if (_sprinkler.parent.GetComp<CompPowerTrader>().PowerOn && !_sprinkler.CurrentlySprinklingMotes && GenTicks.TicksAbs - _sprinkler.LastSprinkledMotesTick >= 57500L)
                     {
-                        this.affectedCells.AddRange(_sprinkler.affectCells);
                         if (_sprinkler.Props.shouldSprinkleMotes)
                         {
                             _sprinkler.StartSprinklingMotes();
@@ -63,21 +70,19 @@ namespace VFEF
                     }
                 }
 
-                this.affectedCells = this.affectedCells.Distinct().ToList(); // Remove duplicate cells
-
-                foreach (IntVec3 cell in this.affectedCells)
+                for (int i = 0; i < affectedCells.Count; i++)
                 {
+                    IntVec3 cell = affectedCells[i];
                     List<Thing> list = map.thingGrid.ThingsListAt(cell);
                     if (list.Count == 0)
                     {
-                        this.BoostPlantAt(cell);
+                        BoostPlantAt(cell);
                     }
-                    else if (!list.FindAll(b => b is Building building && building != null && building.def.altitudeLayer != AltitudeLayer.Conduits && !this.exception.Contains(building.def.defName)).Any())
+                    else if (!list.FindAll(b => b is Building building && building != null && building.def.altitudeLayer != AltitudeLayer.Conduits && !exception.Contains(building.def.defName)).Any())
                     {
-                        this.BoostPlantAt(cell);
+                        BoostPlantAt(cell);
                     }
                 }
-                this.affectedCells.Clear(); // clear the cells for the next day calculation
             }
         }
     }

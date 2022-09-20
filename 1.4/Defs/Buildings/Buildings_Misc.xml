@@ -13,9 +13,9 @@
     </graphicData>
     <comps>
       <li Class="VFEF.CompProperties_ScaresAnimals">
-        <ticksPerPulse>600</ticksPerPulse>        <!-- Don't set this too low, values of ~100 ticks will cause animals to get stuck if placed near a wall -->
-        <effectRadius>10</effectRadius>        <!-- don't go too far out with the radius, the performance of this method is O(n^2) -->
-        <minFleeDistance>30</minFleeDistance>        <!-- this can be (pretty much) as far as you want, defaults to 23 -->
+        <ticksPerPulse>600</ticksPerPulse> <!-- Don't set this too low, values of ~100 ticks will cause animals to get stuck if placed near a wall -->
+        <effectRadius>10</effectRadius> <!-- don't go too far out with the radius, the performance of this method is O(n^2) -->
+        <minFleeDistance>30</minFleeDistance> <!-- this can be (pretty much) as far as you want, defaults to 23 -->
         <!-- As discussed. Inclusive, so animals with a bodySize of 2.1 or lower will be scared. This value is the muffalo bodySize. The check
 					 is for Pawn.BodySize, and so takes the life stage into account. If unset (or set to a negative value) all animals smaller than humans will be affected. -->
         <maxBodySizeToScare>2.1</maxBodySizeToScare>
@@ -52,66 +52,6 @@
       <li>VFE_Res_FarmingTechniques</li>
     </researchPrerequisites>
   </ThingDef>
-  <!--===== Animal Feeder =====-->
-  <ThingDef ParentName="FurnitureWithQualityBase">
-    <defName>VFE_AnimalFeeder</defName>
-    <label>animal feeder</label>
-    <description>A feeding trough. Food stored in this will not deteriorate, even if outside.</description>
-    <thingClass>Building_Storage</thingClass>
-    <graphicData>
-      <texPath>Things/Building/AnimalFeeder/AnimalFeeder</texPath>
-      <graphicClass>Graphic_Multi</graphicClass>
-      <drawSize>(3,1.8)</drawSize>
-    </graphicData>
-    <altitudeLayer>Building</altitudeLayer>
-    <passability>PassThroughOnly</passability>
-    <fillPercent>0.4</fillPercent>
-    <castEdgeShadows>true</castEdgeShadows>
-    <stuffCategories>
-      <li>Metallic</li>
-      <li>Woody</li>
-      <li>Stony</li>
-    </stuffCategories>
-    <costStuffCount>25</costStuffCount>
-    <statBases>
-      <MaxHitPoints>90</MaxHitPoints>
-      <Mass>8</Mass>
-      <WorkToBuild>600</WorkToBuild>
-      <Flammability>1.0</Flammability>
-    </statBases>
-    <size>(2,1)</size>
-    <defaultPlacingRot>South</defaultPlacingRot>
-    <building>
-      <preventDeteriorationOnTop>true</preventDeteriorationOnTop>
-      <defaultStorageSettings>
-        <priority>Important</priority>
-        <filter>
-          <categories>
-            <li>PlantFoodRaw</li>
-          </categories>
-          <thingDefs>
-            <li>Hay</li>
-          </thingDefs>
-        </filter>
-      </defaultStorageSettings>
-    </building>
-    <inspectorTabs>
-      <li>ITab_Storage</li>
-    </inspectorTabs>
-    <staticSunShadowHeight>0.5</staticSunShadowHeight>
-    <surfaceType>Item</surfaceType>
-    <designationCategory>Misc</designationCategory>
-    <canOverlapZones>false</canOverlapZones>
-    <researchPrerequisites>
-      <li>VFE_Res_FarmingTechniques</li>
-    </researchPrerequisites>
-    <comps>
-      <li Class="VFEF.CompProperties_AreaGizmo">
-        <radius>10</radius>        <!-- the radius of the area designated. accounts for the shape of the building, e.g. a 2x1 feeder will create an area which is one unit longer along the longer side. -->
-        <iconPath>Icons/CreateNewArea</iconPath>        <!-- works the same as any other texture path -->
-      </li>
-    </comps>
-  </ThingDef>
   <!--===== Sprinkler =====-->
   <ThingDef>
     <defName>VFE_Sprinkler</defName>
@@ -130,7 +70,7 @@
       </damageData>
     </graphicData>
     <blockWind>false</blockWind>
-    <tickerType>Normal</tickerType>    <!-- Must be on Normal to use tick distribution. If set to TickRare, ticksPerPulse will always be effectively 250. The particle effect doesn't work on any setting other than Normal. -->
+    <tickerType>Normal</tickerType> <!-- Must be on Normal to use tick distribution. If set to TickRare, ticksPerPulse will always be effectively 250. The particle effect doesn't work on any setting other than Normal. -->
     <statBases>
       <WorkToBuild>350</WorkToBuild>
       <Mass>4.5</Mass>
@@ -146,19 +86,19 @@
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>250</basePowerConsumption>
       </li>
-      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_Flickable" />
       <li Class="VFEF.CompProperties_Sprinkler">
         <effectRadius>5.8</effectRadius>
-        <shouldSprinkleMotes>true</shouldSprinkleMotes>        <!-- enables motes, defaults false -->
-        <sprinkleDurationTicks>500</sprinkleDurationTicks>        <!-- duration of the sprinkler effect, in ticks -->
-        <degreesPerTick>1.44</degreesPerTick>        <!-- rotation between each tick in degrees -->
-        <moteThingDef>VFEF_Mote_SprinklerWater</moteThingDef>        <!-- the ThingDef of the particle to spawn -->
+        <shouldSprinkleMotes>true</shouldSprinkleMotes> <!-- enables motes, defaults false -->
+        <sprinkleDurationTicks>500</sprinkleDurationTicks> <!-- duration of the sprinkler effect, in ticks -->
+        <degreesPerTick>1.44</degreesPerTick> <!-- rotation between each tick in degrees -->
+        <moteThingDef>VFEF_Mote_SprinklerWater</moteThingDef> <!-- the ThingDef of the particle to spawn -->
         <!-- Reduces the number of motes thrown. The ticks between each spray will be this value minus one.
 				 Because the method checks whether there are already too many particles onscreen, setting this too low will result in the animation appearing to "reset" every so often. -->
         <moteMod>4</moteMod>
       </li>
     </comps>
-    <specialDisplayRadius>5.8</specialDisplayRadius>    <!-- might not match the effect's radius exactly, see comments in the Sunlamp def -->
+    <specialDisplayRadius>5.8</specialDisplayRadius> <!-- might not match the effect's radius exactly, see comments in the Sunlamp def -->
     <category>Building</category>
     <minifiedDef>MinifiedThing</minifiedDef>
     <altitudeLayer>Building</altitudeLayer>

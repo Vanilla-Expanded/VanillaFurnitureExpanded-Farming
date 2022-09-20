@@ -12,7 +12,7 @@ namespace VFEF
         {
             get
             {
-                return (CompProperties_ScaresAnimals)this.props;
+                return (CompProperties_ScaresAnimals)props;
             }
         }
 
@@ -20,7 +20,7 @@ namespace VFEF
         {
             get
             {
-                return this.Props.ticksPerPulse;
+                return Props.ticksPerPulse;
             }
         }
 
@@ -28,7 +28,7 @@ namespace VFEF
         {
             get
             {
-                return this.Props.effectRadius;
+                return Props.effectRadius;
             }
         }
 
@@ -36,13 +36,13 @@ namespace VFEF
         {
             get
             {
-                return (Find.TickManager.TicksGame + this.hashOffset) % this.TickInterval == 0;
+                return (Find.TickManager.TicksGame + hashOffset) % TickInterval == 0;
             }
         }
 
         public bool ShouldAffectColonyAnimal(Pawn animal)
         {
-            return this.affectCA || animal.Faction != Faction.OfPlayer;
+            return affectCA || animal.Faction != Faction.OfPlayer;
         }
 
         public bool IsAffectedPredator(Pawn animal)
@@ -54,7 +54,7 @@ namespace VFEF
 
         public bool SmallEnoughToScare(Pawn animal)
         {
-            bool flag = this.Props.maxBodySizeToScare < 0f;
+            bool flag = Props.maxBodySizeToScare < 0f;
             bool result;
             if (flag)
             {
@@ -62,7 +62,7 @@ namespace VFEF
             }
             else
             {
-                result = (animal.BodySize <= this.Props.maxBodySizeToScare);
+                result = (animal.BodySize <= Props.maxBodySizeToScare);
             }
             return result;
         }
@@ -70,7 +70,7 @@ namespace VFEF
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            this.hashOffset = this.parent.thingIDNumber.HashOffset();
+            hashOffset = parent.thingIDNumber.HashOffset();
             if (respawningAfterLoad)
             {
                 CompScaresAnimals.HumanBodySize = ThingDefOf.Human.race.baseBodySize;
@@ -80,23 +80,23 @@ namespace VFEF
         public override void CompTick()
         {
             base.CompTick();
-            bool isCheapIntervalTick = this.IsCheapIntervalTick;
+            bool isCheapIntervalTick = IsCheapIntervalTick;
             if (isCheapIntervalTick)
             {
-                this.ScareAnimals();
+                ScareAnimals();
             }
         }
 
         public override void CompTickRare()
         {
             base.CompTickRare();
-            this.ScareAnimals();
+            ScareAnimals();
         }
 
         public void ScareAnimals()
         {
-            IEnumerable<Pawn> enumerable = from x in this.parent.Map.mapPawns.AllPawns
-                                           where x.def.race.intelligence == Intelligence.Animal && this.SmallEnoughToScare(x) && this.IsAffectedPredator(x) && this.ShouldAffectColonyAnimal(x) && !x.Downed
+            IEnumerable<Pawn> enumerable = from x in parent.Map.mapPawns.AllPawns
+                                           where x.def.race.intelligence == Intelligence.Animal && SmallEnoughToScare(x) && IsAffectedPredator(x) && ShouldAffectColonyAnimal(x) && !x.Downed
                                            select x;
             if (!(enumerable == null || enumerable.Count() <= 0))
             {
@@ -104,9 +104,9 @@ namespace VFEF
                 {
                     if (pawn != null)
                     {
-                        if ((pawn.Faction == null || (pawn.Faction == Faction.OfPlayer && this.affectCA)) && pawn.Position.DistanceTo(this.parent.Position) < this.Radius)
+                        if ((pawn.Faction == null || (pawn.Faction == Faction.OfPlayer && affectCA)) && pawn.Position.DistanceTo(parent.Position) < Radius)
                         {
-                            Job newJob = new Job(JobDefOf.Flee, CellFinderLoose.GetFleeDest(pawn, this.parent.Map.listerThings.ThingsOfDef(this.parent.def), this.Props.minFleeDistance), this.parent.Position);
+                            Job newJob = new Job(JobDefOf.Flee, CellFinderLoose.GetFleeDest(pawn, parent.Map.listerThings.ThingsOfDef(parent.def), Props.minFleeDistance), parent.Position);
                             pawn.jobs.StartJob(newJob, JobCondition.InterruptOptional, null, false, true, null, null, false, false);
                         }
                     }
