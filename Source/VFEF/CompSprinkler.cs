@@ -1,7 +1,7 @@
-﻿using RimWorld;
-using System.Collections.Generic;
-using Verse;
+﻿using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
+using Verse;
 
 namespace VFEF
 {
@@ -25,28 +25,35 @@ namespace VFEF
 
         public List<IntVec3> affectCells = new List<IntVec3>();
 
+        public Map map;
+        public CompPowerTrader compPowerTrader;
+
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            parent.Map.GetComponent<VFEF_SprinklersManager>().Register(this);
-            LastSprinkledMotesTick = (long)(GenTicks.TicksAbs - 60000);
-            affectCells.AddRange(parent.Map.AllCells.Where(cell => parent.Position.DistanceTo(cell) < Props.effectRadius));
+            map = parent.Map;
+
+            LastSprinkledMotesTick = GenTicks.TicksAbs - 60000;
+            affectCells = GenRadial.RadialCellsAround(parent.Position, Props.effectRadius, true).ToList();
+
+            map.GetComponent<VFEF_SprinklersManager>().Register(this);
+            compPowerTrader = parent.GetComp<CompPowerTrader>();
         }
 
         public override void PostDeSpawn(Map map)
         {
             base.PostDeSpawn(map);
-            map.GetComponent<VFEF_SprinklersManager>().Deregister(this);
             affectCells.Clear();
+            map.GetComponent<VFEF_SprinklersManager>().Deregister(this);
         }
 
         public void StartSprinklingMotes()
         {
             curRot = 0f;
             CurrentlySprinklingMotes = true;
-            MoteSprinkleEndTick = (long)(GenTicks.TicksAbs + Props.sprinkleDurationTicks);
+            MoteSprinkleEndTick = GenTicks.TicksAbs + Props.sprinkleDurationTicks;
             SprinkleMotes();
-            LastSprinkledMotesTick = (long)GenTicks.TicksAbs;
+            LastSprinkledMotesTick = GenTicks.TicksAbs;
         }
 
         public void SprinkleMotes()
@@ -57,7 +64,7 @@ namespace VFEF
             }
             if (GenTicks.TicksAbs % Props.moteMod == 0)
             {
-                MoteSprinkler.ThrowWaterSpray(parent.TrueCenter(), parent.Map, curRot, Props.moteThingDef);
+                MoteSprinkler.ThrowWaterSpray(parent.TrueCenter(), map, curRot, Props.moteThingDef);
             }
             curRot += Props.degreesPerTick;
         }

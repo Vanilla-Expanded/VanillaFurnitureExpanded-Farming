@@ -34,8 +34,7 @@ namespace VFEF
 
         private void BoostPlantAt(IntVec3 cell)
         {
-            Plant _plant = cell.GetPlant(map);
-            if (_plant != null && !_plant.def.plant.IsTree) // No tree growth boost
+            if (cell.GetPlant(map) is Plant _plant && !_plant.def.plant.IsTree) // No tree growth boost
             {
                 _plant.Growth += 0.04f;
             }
@@ -54,33 +53,29 @@ namespace VFEF
         {
             if (GenLocalDate.HourOfDay(map) == 7)
             {
-                for (int i = 0; i < comps.Count; i++)
+                var ticksAbs = GenTicks.TicksAbs;
+                for (int c = 0; c < comps.Count; c++)
                 {
-                    CompSprinkler _sprinkler = comps[i];
-                    if (_sprinkler.parent.GetComp<CompPowerTrader>().PowerOn && !_sprinkler.CurrentlySprinklingMotes && GenTicks.TicksAbs - _sprinkler.LastSprinkledMotesTick >= 57500L)
+                    CompSprinkler _sprinkler = comps[c];
+                    if (_sprinkler.Props.shouldSprinkleMotes)
                     {
-                        if (_sprinkler.Props.shouldSprinkleMotes)
+                        if (_sprinkler.compPowerTrader.PowerOn && !_sprinkler.CurrentlySprinklingMotes && ticksAbs - _sprinkler.LastSprinkledMotesTick >= 57500L)
                         {
                             _sprinkler.StartSprinklingMotes();
+                            for (int i = 0; i < affectedCells.Count; i++)
+                            {
+                                var cell = affectedCells[i];
+                                var list = map.thingGrid.ThingsListAt(cell);
+                                if (list.Count == 0 || !list.Any(b => b is Building building && exception.Contains(building.def.defName)))
+                                {
+                                    BoostPlantAt(cell);
+                                }
+                            }
                         }
-                    }
-                    else if (_sprinkler.Props.shouldSprinkleMotes && _sprinkler.CurrentlySprinklingMotes)
-                    {
-                        _sprinkler.SprinkleMotes();
-                    }
-                }
-
-                for (int i = 0; i < affectedCells.Count; i++)
-                {
-                    IntVec3 cell = affectedCells[i];
-                    List<Thing> list = map.thingGrid.ThingsListAt(cell);
-                    if (list.Count == 0)
-                    {
-                        BoostPlantAt(cell);
-                    }
-                    else if (!list.FindAll(b => b is Building building && building != null && building.def.altitudeLayer != AltitudeLayer.Conduits && !exception.Contains(building.def.defName)).Any())
-                    {
-                        BoostPlantAt(cell);
+                        else if (_sprinkler.CurrentlySprinklingMotes)
+                        {
+                            _sprinkler.SprinkleMotes();
+                        }
                     }
                 }
             }
