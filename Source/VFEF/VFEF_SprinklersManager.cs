@@ -11,7 +11,8 @@ namespace VFEF
         {
         }
 
-        private List<IntVec3> affectedCells = new List<IntVec3>();
+        private readonly HashSet<IntVec3> allAffectedCells = new HashSet<IntVec3>();
+        private readonly Dictionary<CompSprinkler, List<IntVec3>> affectedCells = new Dictionary<CompSprinkler, List<IntVec3>>();
 
         private readonly List<CompSprinkler> comps = new List<CompSprinkler>();
         private readonly List<string> exception = new List<string>()
@@ -42,11 +43,26 @@ namespace VFEF
 
         private void ReCacheCells()
         {
+            // Clear everything
+            affectedCells.Clear();
+            allAffectedCells.Clear();
+            // Recache
             for (int i = 0; i < comps.Count; i++)
             {
-                affectedCells.AddRange(comps[i].affectCells);
+                var comp = comps[i];
+                var affect = comp.affectCells;
+
+                affectedCells.Add(comp, new List<IntVec3>());
+                for (int o = 0; o < affect.Count; o++)
+                {
+                    // If cell affected by comp is not already affected by another one
+                    var cell = affect[o];
+                    if (!allAffectedCells.Contains(cell))
+                        affectedCells[comp].Add(cell);
+                }
+                // Add all the cell affected
+                allAffectedCells.AddRange(affectedCells[comp]);
             }
-            affectedCells = affectedCells.Distinct().ToList(); // Remove duplicate cells
         }
 
         public override void MapComponentTick()
@@ -56,15 +72,17 @@ namespace VFEF
                 var ticksAbs = GenTicks.TicksAbs;
                 for (int c = 0; c < comps.Count; c++)
                 {
-                    CompSprinkler _sprinkler = comps[c];
+                    var _sprinkler = comps[c];
                     if (_sprinkler.Props.shouldSprinkleMotes)
                     {
                         if (_sprinkler.compPowerTrader.PowerOn && !_sprinkler.CurrentlySprinklingMotes && ticksAbs - _sprinkler.LastSprinkledMotesTick >= 57500L)
                         {
                             _sprinkler.StartSprinklingMotes();
-                            for (int i = 0; i < affectedCells.Count; i++)
+                            var cells = affectedCells[_sprinkler];
+
+                            for (int i = 0; i < cells.Count; i++)
                             {
-                                var cell = affectedCells[i];
+                                var cell = cells[i];
                                 var list = map.thingGrid.ThingsListAt(cell);
                                 if (list.Count == 0 || !list.Any(b => b is Building building && exception.Contains(building.def.defName)))
                                 {
