@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.2.2.2\lib\net472\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
@@ -48,15 +52,22 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Building_PlantGrower_NoEmptyLines.cs" />
-    <Compile Include="Building_Scarecrow.cs" />
-    <Compile Include="CompProperties_ScaresAnimals.cs" />
-    <Compile Include="CompProperties_Sprinkler.cs" />
-    <Compile Include="CompScaresAnimals.cs" />
-    <Compile Include="CompSprinkler.cs" />
+    <Compile Include="Building\Building_PlantGrower_NoEmptyLines.cs" />
+    <Compile Include="Building\Building_Scarecrow.cs" />
+    <Compile Include="Comps\Properties\CompProperties_ScaresAnimals.cs" />
+    <Compile Include="Comps\Properties\CompProperties_Sprinkler.cs" />
+    <Compile Include="Comps\CompScaresAnimals.cs" />
+    <Compile Include="Comps\CompSprinkler.cs" />
+    <Compile Include="DefOfs\InternalDefOf.cs" />
+    <Compile Include="Harmony\HarmonyInstance.cs" />
+    <Compile Include="Harmony\PlantUtility_CanSowOnGrower.cs" />
     <Compile Include="MoteSprinkler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VFEF_SprinklersManager.cs" />
+    <Compile Include="MapComponents\VFEF_SprinklersManager.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
