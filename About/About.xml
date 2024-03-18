@@ -7,7 +7,7 @@
 		<li>1.4</li>
 		<li>1.5</li>
 	</supportedVersions>
-	<modIconPath>UI/VELogo</modIconPath>
+	<modIconPath IgnoreIfNoMatchingField="True">UI/VELogo</modIconPath>
 	<packageId>VanillaExpanded.VFEFarming</packageId>
 	<description>Vanilla Furniture Expanded - Farming module is a great way to boost the efficiency of your colonies when it comes to providing food on the table. With a plethora of new hydroponics - one for early game and one for late game, you can really witness the technological progression of your colony - and gain more enjoyment from the game itself.
 
