@@ -83,8 +83,9 @@ namespace VFEF
                             for (int i = 0; i < cells.Count; i++)
                             {
                                 var cell = cells[i];
-                                var list = map.thingGrid.ThingsListAt(cell);
-                                if (list.Count == 0 || !list.Any(b => b is Building building && exception.Contains(building.def.defName)))
+                                var list = map.thingGrid.ThingsListAt(cell);                                
+                                                               
+                                if (list.Count == 1 || (list.Count > 1 && !list.ContainsAny(x => x is Building building && !exception.Contains(building.def.defName))))
                                 {
                                     BoostPlantAt(cell);
                                 }
