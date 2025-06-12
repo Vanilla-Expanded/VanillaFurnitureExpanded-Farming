@@ -11,7 +11,7 @@ namespace VFEF
             string result;
             if (spawned)
             {
-                result = ((!PlantUtility.GrowthSeasonNow(base.Position, base.Map, true)) ? "CannotGrowBadSeasonTemperature".Translate() : "GrowSeasonHereNow".Translate());
+                result = ((!PlantUtility.GrowthSeasonNow(base.Position, base.Map, ReflectionCache.plantDefToGrow(this))) ? "CannotGrowBadSeasonTemperature".Translate() : "GrowSeasonHereNow".Translate());
             }
             else
             {

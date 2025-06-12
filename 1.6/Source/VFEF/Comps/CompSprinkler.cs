@@ -40,9 +40,9 @@ namespace VFEF
             compPowerTrader = parent.GetComp<CompPowerTrader>();
         }
 
-        public override void PostDeSpawn(Map map)
+        public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
         {
-            base.PostDeSpawn(map);
+            base.PostDeSpawn(map,mode);
             affectCells.Clear();
             map.GetComponent<VFEF_SprinklersManager>().Deregister(this);
         }
