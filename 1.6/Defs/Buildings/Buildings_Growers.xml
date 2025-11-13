@@ -110,5 +110,12 @@
 		</researchPrerequisites>
 		<terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
 		<designationCategory>Production</designationCategory>
+		 <modExtensions>
+            <li Class="VEF.Plants.SowerExtension">
+                <extraSowTags>
+					<li>Oxyalgae</li>
+				</extraSowTags>
+            </li>
+        </modExtensions>
 	</ThingDef>
 </Defs>

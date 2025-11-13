@@ -144,5 +144,12 @@
 		<building>
 			<sowTag>Ground</sowTag>
 		</building>
+		 <modExtensions>
+            <li Class="VEF.Plants.SowerExtension">
+                <extraSowTags>
+					<li>Oxyalgae</li>
+				</extraSowTags>
+            </li>
+        </modExtensions>
 	</ThingDef>
 </Defs>
